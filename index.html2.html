@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>ChatBot Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .chatbox {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #25D366;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .mensaje {
+      margin-top: 15px;
+      font-size: 14px;
+      color: green;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="chatbox">
+    <h2>ChatBot Demo</h2>
+    <input type="text" id="nombre" placeholder="Nombre y Apellido" required>
+    <input type="tel" id="telefono" placeholder="Teléfono" required>
+    <textarea id="consulta" rows="3" placeholder="Escribí tu consulta..." required></textarea>
+    <button onclick="enviarDatos()">Enviar</button>
+    <div class="mensaje" id="mensajeConfirmacion"></div>
+  </div>
+
+  <script>
+    function enviarDatos() {
+      const nombre = document.getElementById("nombre").value;
+      const telefono = document.getElementById("telefono").value;
+      const consulta = document.getElementById("consulta").value;
+
+      if (!nombre || !telefono || !consulta) {
+        alert("Por favor completá todos los campos.");
+        return;
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbyR_y5uYjyxtH0AiB8Uihs63gpIwskThKlLdL3_TUYURwEnWyt0Ilh8EMsEvgVqipSe/exec", {
+        method: "POST",
+        body: JSON.stringify({ nombre, telefono, consulta }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(res => {
+        if (res.ok) {
+          document.getElementById("mensajeConfirmacion").innerText = "✅ Consulta enviada correctamente.";
+          document.getElementById("nombre").value = "";
+          document.getElementById("telefono").value = "";
+          document.getElementById("consulta").value = "";
+        } else {
+          alert("Hubo un error al enviar los datos.");
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("Error al conectar con el servidor.");
+      });
+    }
+  </script>
+</body>
+</html>
